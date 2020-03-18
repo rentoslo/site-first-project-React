@@ -41,6 +41,7 @@ export const typesUsers = {
   addUser: 'addUser',
   deleteUser: 'deleteUser',
   changeRiscado: 'changeRiscado',
+  updateUser: 'updateUser',
 };
 
 export const actionsUsers = {
@@ -69,6 +70,17 @@ export const actionsUsers = {
     return {
       type: typesUsers.changeRiscado,
       payload: { id }
+    }
+  },
+
+  updateUser: (id, name, email) => {
+    return {
+      type: typesUsers.updateUser,
+      payload: {
+        id,
+        name,
+        email,
+      }
     }
   }
 
@@ -100,15 +112,26 @@ export const reducersUsers = (state = initialState, action) => {
             ...user,
             riscado: !(user.riscado)
           };
-        } 
+        }
         return user;
       })
       return {
         users: verifica
       }
 
-
-
+    case typesUsers.updateUser:
+      return {
+        users: state.users.map((user) => {
+          if (user.id === action.payload.id) {
+            return {
+              ...user,
+              name: action.payload.name ? action.payload.name : user.name,
+              email: action.payload.email ? action.payload.email : user.email,
+            }
+          }
+          return user
+        })
+      }
 
     default:
       return state

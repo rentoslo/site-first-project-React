@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
@@ -8,7 +8,7 @@ import { actionsUsers } from '../../store/ducks/users'
 import Header from '../../components/header';
 
 const Users = () => {
-  const [toggle, setToggle] = useState(false);
+  const [id, setId] = useState(null);
   const dispatch = useDispatch();
   const users = useSelector(state => state.user.users);
 
@@ -31,6 +31,7 @@ const Users = () => {
       <Header />
       <h1> Lista de usuários </h1>
       <div >
+
         <table >
           <thead>
             <tr>
@@ -41,23 +42,38 @@ const Users = () => {
               <th>EXCLUIR</th>
             </tr>
           </thead>
+          <tbody>
 
-          {users.map((item) => {
-            return (
-              <tr key={item.id}>
-                <td>{item.id}</td>
-                <td onDoubleClick={(e)=>setToggle(!toggle)}>{toggle ? <input value={ item.email } /> : item.email}</td>
-                {/* <td onDoubleClick={(e)=>setToggle(!toggle)}>{toggle ? <input value={ item.email } /> : item.email}</td> */}
-                <td onDoubleClick={(e)=>doubleClickEdit(item.id, item.name)}>{item.name}</td>
-                <td onClick={(e) => changeRiscado(item.id)}>{item.riscado ? "verdadeiro" : "falso"}</td>
-                <td><button onClick={(e) => handleDeleteUser(item.id)}>Excluir registro</button></td>
-              </tr>
-            )
-          })}
-
-
+            {users.map((item) => {
+              return (
+                <tr key={item.id}>
+                  <td >{item.id}</td>
+                  <td >{item.email}</td>
+                  <td onDoubleClick={() => { id === item.id ? setId("") : setId(item.id) }}>
+                    {id === item.id
+                      ?
+                      <input
+                        defaultValue={item.name}
+                        onKeyDown={(e) => {
+                          // if (apertou enter e nadamudou) {
+                          //   setId(null)
+                          // }
+                          // console.log(e.keyCode, e.target.value)
+                          if (e.keyCode === 13) {
+                            dispatch(actionsUsers.updateUser(item.id, e.target.value, null))
+                            setId(null)
+                          }
+                        }}
+                      />
+                      : item.name}
+                  </td>
+                  <td onClick={(e) => changeRiscado(item.id)}>{item.riscado ? "verdadeiro" : "falso"}</td>
+                  <td><button onClick={(e) => handleDeleteUser(item.id)}>Excluir registro</button></td>
+                </tr>
+              )
+            })}
+          </tbody>
         </table>
-
 
       </div>
     </div>
