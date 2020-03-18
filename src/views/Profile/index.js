@@ -1,69 +1,67 @@
-import React, { useState, useEffect } from "react";
-import PropType from "prop-types";
-import axios from "axios";
+import React, {useState} from 'react';
 
-import Header from "../../components/header"
-import Loading from '../../components/loading'
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+// actions users
+import { actionsUsers } from '../../store/ducks/users'
 
-const Profile = () => {
-  const [users, setUsers] = useState([]);
-  const [recarregar, setRecarregar] = useState(false);
-  const [listaCarregada, setListaCarregada] = useState(false);
+import Header from '../../components/header';
 
-  useEffect(() => {
-    axios({
-      method: 'get', // verbo http
-      url: 'http://localhost:3333/users/', // url
-    })
-      .then(response => {
-        setUsers(response.data)
-        setListaCarregada(true)
-        // console.log(response.data)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-      
-  }, [recarregar]);
+const Users = () => {
+  const [toggle, setToggle] = useState(false);
+  const dispatch = useDispatch();
+  const users = useSelector(state => state.user.users);
 
-  // useEffect( ()=> {
-  //   console.log("Sei La")
-  // })
-
-  useEffect( ()=> {
-    return () =>{ console.log('Componente desmontado') }
-  },[])
-
-  // useEffect( ()=> {
-  //   console.log("Lista Recarregada")
-  // },[recarregar]);
-
-  const zerarLista = () => {
-    setUsers([]);
-  }
-  const recarregarLista = () => {
-    setListaCarregada(false) 
-    setRecarregar(!recarregar)
+  const handleDeleteUser = (id) => {
+    dispatch(actionsUsers.deleteUser(id));
   }
 
-  console.log(listaCarregada)
+  const changeRiscado = (id) => {
+    // console.log(id)
+    dispatch(actionsUsers.changeRiscado(id));
+  }
 
-  return <div>
-    <Header />
-    <button onClick={zerarLista}>Zerar Lista</button>
-    <button onClick={recarregarLista}>recarregar</button>
-    { !listaCarregada ? <Loading /> : ''}
-    
-    {users.map((item) => {
-      return <div key={item.id}><li>{item.name}</li>
-        <li>{item.email}</li></div>
-    })}
-  </div>;
+  const doubleClickEdit = (id, item) => {
+    console.log("id"); console.log(id)
+    console.log("item"); console.log(item)
+  }
+
+  return (
+    <div>
+      <Header />
+      <h1> Lista de usuários </h1>
+      <div >
+        <table >
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>EMAIL</th>
+              <th>NAME</th>
+              <th>RISCAR</th>
+              <th>EXCLUIR</th>
+            </tr>
+          </thead>
+
+          {users.map((item) => {
+            return (
+              <tr key={item.id}>
+                <td>{item.id}</td>
+                <td onDoubleClick={(e)=>setToggle(!toggle)}>{toggle ? <input value={ item.email } /> : item.email}</td>
+                {/* <td onDoubleClick={(e)=>setToggle(!toggle)}>{toggle ? <input value={ item.email } /> : item.email}</td> */}
+                <td onDoubleClick={(e)=>doubleClickEdit(item.id, item.name)}>{item.name}</td>
+                <td onClick={(e) => changeRiscado(item.id)}>{item.riscado ? "verdadeiro" : "falso"}</td>
+                <td><button onClick={(e) => handleDeleteUser(item.id)}>Excluir registro</button></td>
+              </tr>
+            )
+          })}
+
+
+        </table>
+
+
+      </div>
+    </div>
+  )
 };
 
-Profile.propTypes = {
-  name: PropType.string,
-  email: PropType.string,
-};
-
-export default Profile;
+export default Users;
