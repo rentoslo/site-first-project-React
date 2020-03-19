@@ -32,16 +32,29 @@ const initialState = {
     }
 
   ],
-  // loading: false,
-  // error: false,
+  loading: false,
+  returnMessage: {
+    message: ''
+  },
 };
 
 // criamos typesUsers
 export const typesUsers = {
   addUser: 'addUser',
+  addUserSuccess: 'addUserSuccess',
+  addUserError: 'addUserError',
+
   deleteUser: 'deleteUser',
+  deleteUserSuccess: 'deleteUserSuccess',
+  deleteUserError: 'deleteUserError',
+
   changeRiscado: 'changeRiscado',
+  changeRiscadoSuccess: 'changeRiscadoSuccess',
+  changeRiscadoError: 'changeRiscadoError',
+
   updateUser: 'updateUser',
+  updateUserSuccess: 'updateUserSuccess',
+  updateUserError: 'updateUserError',
 };
 
 export const actionsUsers = {
@@ -89,23 +102,44 @@ export const actionsUsers = {
 export const reducersUsers = (state = initialState, action) => {
   switch (action.type) {
 
-    case typesUsers.addUser:
+    case typesUsers.addUserSuccess:
       return {
         users: [...state.users, {
           id: action.payload.id,
           name: action.payload.name,
           email: action.payload.email,
           password: action.payload.password,
-          riscado: false
-        }]
+          riscado: false,
+        }],
+        returnMessage: {
+          message: "Sucesso"
+        }
       };
-
-    case typesUsers.deleteUser:
+    case typesUsers.addUserError: {
       return {
-        users: state.users.filter((user) => user.id !== action.payload.id)
-      };
+        ...state,
+        returnMessage: {
+          message: action.payload.message
+        }
+      }
+    }
 
-    case typesUsers.changeRiscado:
+    case typesUsers.deleteUserSuccess:
+      return {
+        users: state.users.filter((user) => user.id !== action.payload.id),
+        returnMessage: {
+          message: "Excluído com sucesso"
+        }
+      };
+    case typesUsers.deleteUserError:
+      return {
+        ...state,
+        returnMessage: {
+          message: action.payload.message
+        }
+      }
+
+    case typesUsers.changeRiscadoSuccess:
       const verifica = state.users.map((user) => {
         if (user.id === action.payload.id) {
           return {
@@ -115,13 +149,12 @@ export const reducersUsers = (state = initialState, action) => {
         }
         return user;
       })
+    case typesUsers.changeRiscadoError:
       return {
         users: verifica
       }
 
-    case typesUsers.updateUser:
-      console.log(action.payload.name)
-      console.log(action.payload.email)
+    case typesUsers.updateUserSuccess:
       return {
         users: state.users.map((user) => {
           if (user.id === action.payload.id) {
@@ -133,6 +166,13 @@ export const reducersUsers = (state = initialState, action) => {
           }
           return user
         })
+      }
+    case typesUsers.updateUserError:
+      return {
+        ...state,
+        returnMessage: {
+          message: "Valor atualizado com sucesso"
+        }
       }
 
     default:

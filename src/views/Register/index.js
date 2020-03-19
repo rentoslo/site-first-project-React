@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import PropType from "prop-types";
 
@@ -11,7 +11,9 @@ import { actionsUsers } from '../../store/ducks/users'
 
 const Register = () => {
   const dispatch = useDispatch();
-
+  
+  const returnMessage = useSelector(state => state.user.returnMessage.message);
+  // console.log("returnMessage"); console.log(returnMessage)
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,6 +32,8 @@ const Register = () => {
       <b>Email:</b><input onChange={(e) => setEmail(e.target.value)} type="text" placeholder="Email" name="email" required /><br />
       <b>Password:</b><input onChange={(e) => setPassword(e.target.value)} type="password" placeholder="Password" name="password" required /><br />
       <button onClick={handleAddUser } >Add New User</button>
+
+      <h4> {returnMessage} </h4>
     </div>
   );
 

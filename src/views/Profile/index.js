@@ -22,11 +22,6 @@ const Users = () => {
     dispatch(actionsUsers.changeRiscado(id));
   }
 
-  const doubleClickEdit = (id, item) => {
-    console.log("id"); console.log(id)
-    console.log("item"); console.log(item)
-  }
-
   return (
     <div>
       <Header />
