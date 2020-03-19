@@ -120,6 +120,8 @@ export const reducersUsers = (state = initialState, action) => {
       }
 
     case typesUsers.updateUser:
+      console.log(action.payload.name)
+      console.log(action.payload.email)
       return {
         users: state.users.map((user) => {
           if (user.id === action.payload.id) {

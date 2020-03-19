@@ -8,7 +8,8 @@ import { actionsUsers } from '../../store/ducks/users'
 import Header from '../../components/header';
 
 const Users = () => {
-  const [id, setId] = useState(null);
+  const [idEmail, setIdEmail] = useState(null);
+  const [idItem, setIdItem] = useState(null);
   const dispatch = useDispatch();
   const users = useSelector(state => state.user.users);
 
@@ -48,9 +49,22 @@ const Users = () => {
               return (
                 <tr key={item.id}>
                   <td >{item.id}</td>
-                  <td >{item.email}</td>
-                  <td onDoubleClick={() => { id === item.id ? setId("") : setId(item.id) }}>
-                    {id === item.id
+
+                  <td onDoubleClick={() => { idEmail === item.id ? setIdEmail("") : setIdEmail(item.id) }} >
+                    {idEmail === item.id
+                      ?
+                      <input defaultValue={item.email} 
+                      onKeyDown={(e)=>{
+                        if (e.keyCode === 13){
+                          dispatch(actionsUsers.updateUser(item.id, null, e.target.value))
+                          setIdEmail(null)
+                        }
+                      }} />
+                      : item.email}
+                  </td>
+
+                  <td onDoubleClick={() => { idItem === item.id ? setIdItem("") : setIdItem(item.id) }}>
+                    {idItem === item.id
                       ?
                       <input
                         defaultValue={item.name}
@@ -59,9 +73,10 @@ const Users = () => {
                           //   setId(null)
                           // }
                           // console.log(e.keyCode, e.target.value)
+                          //13 é o código que vem ao apertar a tecla ENTER
                           if (e.keyCode === 13) {
                             dispatch(actionsUsers.updateUser(item.id, e.target.value, null))
-                            setId(null)
+                            setIdItem(null)
                           }
                         }}
                       />
