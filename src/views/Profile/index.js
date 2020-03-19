@@ -12,6 +12,7 @@ const Users = () => {
   const [idItem, setIdItem] = useState(null);
   const dispatch = useDispatch();
   const users = useSelector(state => state.user.users);
+  const returnMessage = useSelector(state => state.user.returnMessage.message);
 
   const handleDeleteUser = (id) => {
     dispatch(actionsUsers.deleteUser(id));
@@ -84,7 +85,7 @@ const Users = () => {
             })}
           </tbody>
         </table>
-
+        <h4> {returnMessage} </h4>
       </div>
     </div>
   )

@@ -155,8 +155,7 @@ export const reducersUsers = (state = initialState, action) => {
       }
 
     case typesUsers.updateUserSuccess:
-      return {
-        users: state.users.map((user) => {
+        state.users.map((user) => {
           if (user.id === action.payload.id) {
             return {
               ...user,
@@ -166,12 +165,12 @@ export const reducersUsers = (state = initialState, action) => {
           }
           return user
         })
-      }
+      
     case typesUsers.updateUserError:
       return {
         ...state,
         returnMessage: {
-          message: "Valor atualizado com sucesso"
+          message: "Não é possível deixar o nome em branco."
         }
       }
 

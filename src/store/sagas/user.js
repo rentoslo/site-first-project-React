@@ -48,6 +48,9 @@ function* changeRiscado(action){
 function* updateUser(action){
   const { type, payload } = action
   try {
+    if (!payload.name) {
+      throw 'nome obrigatorio'
+    }
     yield put({ type: typesUsers.updateUserSuccess, payload: {id: payload.id, name: payload.name, email: payload.email,}})
   } catch (error) {
     yield put({ type: typesUsers.updateUserError, payload: {
