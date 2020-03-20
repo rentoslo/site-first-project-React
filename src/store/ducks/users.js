@@ -15,21 +15,6 @@ const initialState = {
       password: "123452",
       riscado: false
     }
-    ,
-    {
-      id: Math.random(),
-      name: "Renato3",
-      email: "ren@jhjhj2",
-      password: "123452",
-      riscado: false
-    },
-    {
-      id: Math.random(),
-      name: "Renato5",
-      email: "ren@jhjhj2",
-      password: "123452",
-      riscado: false
-    }
 
   ],
   loading: false,
@@ -96,12 +81,12 @@ export const actionsUsers = {
       }
     }
   }
-
 };
 
 export const reducersUsers = (state = initialState, action) => {
   switch (action.type) {
 
+    // add users
     case typesUsers.addUserSuccess:
       return {
         users: [...state.users, {
@@ -112,7 +97,7 @@ export const reducersUsers = (state = initialState, action) => {
           riscado: false,
         }],
         returnMessage: {
-          message: "Sucesso"
+          message: "Usuário adicionado com sucesso!"
         }
       };
     case typesUsers.addUserError: {
@@ -124,11 +109,12 @@ export const reducersUsers = (state = initialState, action) => {
       }
     }
 
+    // delete user
     case typesUsers.deleteUserSuccess:
       return {
         users: state.users.filter((user) => user.id !== action.payload.id),
         returnMessage: {
-          message: "Excluído com sucesso"
+          message: "Usuário excluído com sucesso!"
         }
       };
     case typesUsers.deleteUserError:
@@ -139,23 +125,34 @@ export const reducersUsers = (state = initialState, action) => {
         }
       }
 
+    // toggle riscado users
     case typesUsers.changeRiscadoSuccess:
-      const verifica = state.users.map((user) => {
-        if (user.id === action.payload.id) {
-          return {
-            ...user,
-            riscado: !(user.riscado)
-          };
+      return {
+        users: state.users.map((user) => {
+          if (user.id === action.payload.id) {
+            return {
+              ...user,
+              riscado: !(user.riscado)
+            };
+          }
+          return user;
+        }),
+        returnMessage: {
+          message: 'Usuário riscado com sucesso!'
         }
-        return user;
-      })
+      }
     case typesUsers.changeRiscadoError:
       return {
-        users: verifica
+        ...state,
+        returnMessage: {
+          message: action.payload.message
+        }
       }
 
+    // update user
     case typesUsers.updateUserSuccess:
-        state.users.map((user) => {
+      return {
+        users: state.users.map((user) => {
           if (user.id === action.payload.id) {
             return {
               ...user,
@@ -163,14 +160,17 @@ export const reducersUsers = (state = initialState, action) => {
               email: action.payload.email ? action.payload.email : user.email,
             }
           }
-          return user
-        })
-      
+          return user;
+        }),
+        returnMessage: {
+          message: "Usário alterado com sucesso!"
+        }
+      }
     case typesUsers.updateUserError:
       return {
         ...state,
         returnMessage: {
-          message: "Não é possível deixar o nome em branco."
+          message: action.payload.message
         }
       }
 
