@@ -11,6 +11,19 @@ import Input from "../../components/Input"
 // actions users
 import { actionsUsers } from '../../store/ducks/users'
 
+const validate = values => {
+  const errors = {}
+  if (!values.name) {
+    errors.name = 'Required'
+  }
+  if (!values.email) {
+    errors.email = 'Required'
+  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+    errors.email = 'Invalid email address'
+  }
+  return errors
+}
+
 const Register = (props) => {
   const { handleSubmit } = props;
 
@@ -61,4 +74,7 @@ const Register = (props) => {
 Register.propTypes = {
 };
 
-export default reduxForm({ form: 'register' })(Register)
+export default reduxForm({ 
+  form: 'register', 
+  validate 
+})(Register)
